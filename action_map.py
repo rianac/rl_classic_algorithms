@@ -10,7 +10,7 @@ from algorithms.qlearning import QLearning
 from algorithms.expected_sarsa import ExpectedSarsa
 from algorithms.dynaq import DynaQ
 
-from utils.operating import run_episodes
+from utils.operation_manager import run_episodes
 
 
 
