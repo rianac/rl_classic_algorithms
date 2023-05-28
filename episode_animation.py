@@ -61,6 +61,18 @@ if __name__ == '__main__':
     env = gym.make("MountainCar-v0")
     env._max_episode_steps = 3000
 
+    # Setting for exploration policy
+    exploration = {
+        # policy types implemented: "epsilon_greedy", "softmax", "max_boltzmann"
+        "policy" : "max_boltzmann",
+        # linear decaying plan for epsilon_greedy policy
+        "epsilon" : 1.0,
+        "epsilon_decay" : 0.95,
+        "min_epsilon" : 0.00001,
+        # static plan for softmax policy
+        "temperature" : 0.4,
+    }
+
     params = {
         "algorithm" : "qlearning",
         "qfun_type" : "linear_approx",
@@ -68,15 +80,14 @@ if __name__ == '__main__':
         "coding_type" : "tile",
         "alpha" : 0.1,
         "gamma" : 1.0,
-        "epsilon" : 0.1,
-        "epsilon_decay" : 0.98,
-        "min_epsilon" : 0.005,
         "n" : 5,
         "lambda" : 0.5,
         "et_type" : "accumulating",
         "plan_rep" : 10,
         "model_size" : 500,
     }
+
+    params.update(exploration)
 
     animation_test(env,params,num_episodes=200)
 

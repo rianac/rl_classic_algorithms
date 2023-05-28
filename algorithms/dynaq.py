@@ -10,7 +10,7 @@ from utils.exploration_policy import ExplorationPolicy
 class DynaQ():
     def __init__(self, env, qfun_type, bins, coding_type,
                  alpha=0.1, gamma=0.99, plan_rep=10, model_size=1000,
-                 epsilon=0.1, epsilon_decay=0.995, min_epsilon=0.1,**kwargs):
+                 **kwargs):
 
         assert isinstance(env.action_space, gsp.discrete.Discrete), \
             "Action space of environment is not discrete"
@@ -28,8 +28,7 @@ class DynaQ():
         self.bins = bins
         self.actions = list(range(env.action_space.n))
 
-        self.policy = ExplorationPolicy(self.actions,
-                                        epsilon, epsilon_decay, min_epsilon)
+        self.policy = ExplorationPolicy(self.actions, **kwargs)
 
         self.prev_state = None
         self.prev_action = None

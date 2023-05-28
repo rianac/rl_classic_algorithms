@@ -9,7 +9,6 @@ from utils.exploration_policy import ExplorationPolicy
 class SarsaLambda():
     def __init__(self, env, qfun_type, bins, coding_type,
                  alpha=0.1, gamma=0.99,
-                 epsilon=0.1, epsilon_decay=0.995, min_epsilon=0.1,
                  lambda_val=0.5, et_type="accumulating", **kwargs):
 
         assert isinstance(env.action_space, gsp.discrete.Discrete), \
@@ -25,8 +24,7 @@ class SarsaLambda():
         self.bins = bins
         self.actions = list(range(env.action_space.n))
 
-        self.policy = ExplorationPolicy(self.actions,
-                                        epsilon, epsilon_decay, min_epsilon)
+        self.policy = ExplorationPolicy(self.actions, **kwargs)
 
         self.prev_state = None
         self.prev_action = None

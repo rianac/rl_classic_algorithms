@@ -129,18 +129,27 @@ if __name__ == '__main__':
     env = gym.make("MountainCar-v0")
     env._max_episode_steps = 3000
 
+    # Setting for exploration policy
+    exploration = {
+        # policy types implemented: "epsilon_greedy", "softmax", "max_boltzmann"
+        "policy" : "max_boltzmann",
+        # linear decaying plan for epsilon_greedy policy
+        "epsilon" : 1.0,
+        "epsilon_decay" : 0.95,
+        "min_epsilon" : 0.00001,
+        # static plan for softmax policy
+        "temperature" : 0.4,
+    }
+
     params = {
-        "algorithm" : "sarsa",    # can be tested only as param2
+        "algorithm" : "dynaq",    # can be tested only as param2
         # q function representation
-        "qfun_type" : "linear_approx",    # can be tested only as param2
-        "bins" : [3,3],           # can be tested only as param2
-        "coding_type" : "rbf",     # can be tested only as param2
+        "qfun_type" : "tabular",    # can be tested only as param2
+        "bins" : [10,10],           # can be tested only as param2
+        "coding_type" : "tile",     # can be tested only as param2
         # common learning parameters
         "alpha" : 0.1,
         "gamma" : 1.0,
-        "epsilon" : 0.1,
-        "epsilon_decay" : 0.98,
-        "min_epsilon" : 0.005,
         # sarsa_n specific parameters
         "n" : 5,
         # sarsa_lambda specific parameters
@@ -151,10 +160,12 @@ if __name__ == '__main__':
         "model_size" : 500,
     }
 
-    tested_param1 = "lambda_val"
-    tested_param1_values = [0.3]
+    params.update(exploration)
 
-    tested_param2 = "bins"
+    tested_param1 = "epsilon"
+    tested_param1_values = [1.0]
+
+    tested_param2 = None
     tested_param2_values = [[3,3]]
 
     if tested_param2 is not None:

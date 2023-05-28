@@ -66,51 +66,63 @@ if __name__ == '__main__':
     env._max_episode_steps = 3000
 
     params = [
-        ("tab",
+        ("sarsa",
          {
-             "algorithm" : "qlearning",
+             "algorithm" : "sarsa",
              "qfun_type" : "tabular",
              "bins" : [10,10],
              "coding_type" : "tile",
              "alpha" : 0.1,
              "gamma" : 1.0,
-             "epsilon" : 0.1,
-             "epsilon_decay" : 0.98,
-             "min_epsilon" : 0.005,
+        "policy" : "max_boltzmann",
+        # linear decaying plan for epsilon_greedy policy
+        "epsilon" : 1.0,
+        "epsilon_decay" : 0.95,
+        "min_epsilon" : 0.00001,
+        # static plan for softmax policy
+        "temperature" : 0.4,
              "n" : 5,
              "lambda" : 0.5,
              "et_type" : "accumulating",
              "plan_rep" : 50,
              "model_size" : 500,
          }),
-        ("lin",
+        ("sarsa_n",
          {
-             "algorithm" : "qlearning",
-             "qfun_type" : "linear_approx",
+             "algorithm" : "sarsa_n",
+             "qfun_type" : "tabular",
              "bins" : [10,10],
              "coding_type" : "tile",
              "alpha" : 0.1,
              "gamma" : 1.0,
-             "epsilon" : 0.1,
-             "epsilon_decay" : 0.98,
-             "min_epsilon" : 0.005,
+        "policy" : "max_boltzmann",
+        # linear decaying plan for epsilon_greedy policy
+        "epsilon" : 1.0,
+        "epsilon_decay" : 0.95,
+        "min_epsilon" : 0.00001,
+        # static plan for softmax policy
+        "temperature" : 0.4,
              "n" : 5,
              "lambda" : 0.5,
              "et_type" : "accumulating",
              "plan_rep" : 50,
              "model_size" : 500,
          }),
-        ("dynaq",
+        ("sarsa_lambda",
          {
-             "algorithm" : "dynaq",
+             "algorithm" : "sarsa_lambda",
              "qfun_type" : "tabular",
              "bins" : [10,10],
              "coding_type" : "tile",
-             "alpha" : 0.8,
+             "alpha" : 0.1,
              "gamma" : 1.0,
-             "epsilon" : 0.1,
-             "epsilon_decay" : 0.98,
-             "min_epsilon" : 0.005,
+        "policy" : "max_boltzmann",
+        # linear decaying plan for epsilon_greedy policy
+        "epsilon" : 1.0,
+        "epsilon_decay" : 0.95,
+        "min_epsilon" : 0.00001,
+        # static plan for softmax policy
+        "temperature" : 0.4,
              "n" : 5,
              "lambda" : 0.5,
              "et_type" : "accumulating",
@@ -119,6 +131,6 @@ if __name__ == '__main__':
          })
     ]
 
-    algorithm_test(env, params[:2], num_repetitions=1,num_episodes=100)
+    algorithm_test(env, params[:], num_repetitions=1,num_episodes=100)
 
     env.close()

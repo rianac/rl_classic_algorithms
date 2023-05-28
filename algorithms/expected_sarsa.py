@@ -8,8 +8,7 @@ from utils.exploration_policy import ExplorationPolicy
 
 class ExpectedSarsa():
     def __init__(self, env, qfun_type, bins, coding_type,
-                 alpha=0.1, gamma=0.99,
-                 epsilon=0.1, epsilon_decay=0.995, min_epsilon=0.1,**kwargs):
+                 alpha=0.1, gamma=0.99, **kwargs):
 
         assert isinstance(env.action_space, gsp.discrete.Discrete), \
             "Action space of environment is not discrete"
@@ -25,8 +24,7 @@ class ExpectedSarsa():
         self.nactions = env.action_space.n
         self.actions = list(range(env.action_space.n))
 
-        self.policy = ExplorationPolicy(self.actions,
-                                        epsilon, epsilon_decay, min_epsilon)
+        self.policy = ExplorationPolicy(self.actions, **kwargs)
 
         self.prev_state = None
         self.prev_action = None
@@ -91,15 +89,12 @@ class ExpectedSarsa():
         else:
             qvalues = [self.qfunction.value(state, action)
                        for action in self.actions]
-            best_action = self.policy.best_action(qvalues)
 
-            epsilon = self.policy.get_epsilon()
+            probs = self.policy.get_distribution(qvalues)
 
             exp_value = 0
-            for action, qvalue in zip(self.actions, qvalues):
-                act_prob = (1 - epsilon + epsilon / self.nactions) \
-                    if action == best_action else (epsilon / self.nactions)
-                exp_value += qvalue * act_prob
+            for prob, qvalue in zip(probs, qvalues):
+                exp_value += qvalue * prob
 
             target = reward + self.gamma * exp_value
 
