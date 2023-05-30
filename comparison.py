@@ -66,15 +66,15 @@ if __name__ == '__main__':
     env._max_episode_steps = 3000
 
     params = [
-        ("sarsa",
+        ("eg",
          {
              "algorithm" : "sarsa",
-             "qfun_type" : "tabular",
+             "qfun_type" : "linear_approx",
              "bins" : [10,10],
-             "coding_type" : "tile",
+             "coding_type" : "rbf",
              "alpha" : 0.1,
              "gamma" : 1.0,
-        "policy" : "max_boltzmann",
+        "policy" : "epsilon_greedy",
         # linear decaying plan for epsilon_greedy policy
         "epsilon" : 1.0,
         "epsilon_decay" : 0.95,
@@ -87,15 +87,15 @@ if __name__ == '__main__':
              "plan_rep" : 50,
              "model_size" : 500,
          }),
-        ("sarsa_n",
+        ("s",
          {
-             "algorithm" : "sarsa_n",
-             "qfun_type" : "tabular",
+             "algorithm" : "sarsa",
+             "qfun_type" : "linear_approx",
              "bins" : [10,10],
-             "coding_type" : "tile",
+             "coding_type" : "rbf",
              "alpha" : 0.1,
              "gamma" : 1.0,
-        "policy" : "max_boltzmann",
+        "policy" : "softmax",
         # linear decaying plan for epsilon_greedy policy
         "epsilon" : 1.0,
         "epsilon_decay" : 0.95,
@@ -108,12 +108,12 @@ if __name__ == '__main__':
              "plan_rep" : 50,
              "model_size" : 500,
          }),
-        ("sarsa_lambda",
+        ("mb",
          {
-             "algorithm" : "sarsa_lambda",
-             "qfun_type" : "tabular",
+             "algorithm" : "sarsa",
+             "qfun_type" : "linear_approx",
              "bins" : [10,10],
-             "coding_type" : "tile",
+             "coding_type" : "rbf",
              "alpha" : 0.1,
              "gamma" : 1.0,
         "policy" : "max_boltzmann",
@@ -131,6 +131,6 @@ if __name__ == '__main__':
          })
     ]
 
-    algorithm_test(env, params[:], num_repetitions=1,num_episodes=100)
+    algorithm_test(env, params[:], num_repetitions=10,num_episodes=100)
 
     env.close()

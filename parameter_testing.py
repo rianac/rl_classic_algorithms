@@ -7,6 +7,7 @@ from algorithms.sarsa_lambda import SarsaLambda
 from algorithms.qlearning import QLearning
 from algorithms.expected_sarsa import ExpectedSarsa
 from algorithms.dynaq import DynaQ
+#from algorithms.one_step_actor_critic import OneStepActorCritic
 
 from utils.operation_manager import run_repeatedly
 
@@ -62,6 +63,8 @@ def grid_test(env, default_params,
                 RLAgent = ExpectedSarsa
             elif default_params["algorithm"] == "dynaq":
                 RLAgent = DynaQ
+            elif default_params["algorithm"] == "osac":
+                RLAgent = OneStepActorCritic
             else:
                 unimplemented
 
@@ -142,13 +145,13 @@ if __name__ == '__main__':
     }
 
     params = {
-        "algorithm" : "dynaq",    # can be tested only as param2
+        "algorithm" : "sarsa",    # can be tested only as param2
         # q function representation
-        "qfun_type" : "tabular",    # can be tested only as param2
+        "qfun_type" : "linear_approx",    # can be tested only as param2
         "bins" : [10,10],           # can be tested only as param2
-        "coding_type" : "tile",     # can be tested only as param2
+        "coding_type" : "fourier_simple",     # can be tested only as param2
         # common learning parameters
-        "alpha" : 0.1,
+        "alpha" : 0.01,
         "gamma" : 1.0,
         # sarsa_n specific parameters
         "n" : 5,

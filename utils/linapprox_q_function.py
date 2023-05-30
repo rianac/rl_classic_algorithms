@@ -6,7 +6,7 @@ from codings.bin_coding import get_discretizer as get_bin_discretizer
 from codings.tile_coding import get_discretizer as get_tile_discretizer
 from codings.rbf_coding import get_discretizer as get_rbf_discretizer
 from codings.polynomial_coding import get_discretizer as get_polynomial_discretizer
-
+from codings.fourier_coding import get_discretizer as get_fourier_discretizer
 
 
 class QValueFunction():
@@ -26,16 +26,22 @@ class QValueFunction():
         self.coding_type = coding_type
         if self.coding_type == "bin":
             self.discretizer = get_bin_discretizer(feature_ranges, bins)
-            self.num_tilings = 1
+            self.coding_size = self.bins
         elif self.coding_type == "tile":
             self.discretizer = get_tile_discretizer(feature_ranges, 8, bins)
-            self.num_tilings = 8
+            self.coding_size = self.bins * 8
         elif self.coding_type == "rbf":
             self.discretizer = get_rbf_discretizer(feature_ranges, bins)
-            self.num_tilings = 1
+            self.coding_size = self.bins
         elif self.coding_type == "polynomial":
             self.discretizer = get_polynomial_discretizer(bins)
-            self.num_tilings = 1
+            self.coding_size = self.bins
+        elif self.coding_type == "fourier":
+            self.discretizer = get_fourier_discretizer(feature_ranges, bins)
+            self.coding_size = self.bins
+        elif self.coding_type == "fourier_simple":
+            self.discretizer = get_fourier_discretizer(feature_ranges, bins, True)
+            self.coding_size = sum(bins) - (len(bins) - 1)
         else:
             unimplemented
 
@@ -43,8 +49,7 @@ class QValueFunction():
         self.reset()
 
     def reset(self):
-        self.weigths = np.zeros((self.num_actions,
-                                     self.bins * self.num_tilings))
+        self.weigths = np.zeros((self.num_actions, self.coding_size))
 
     def reset_episode(self):
         if self.et_type is not None:
