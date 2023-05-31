@@ -1,14 +1,11 @@
 import numpy as np
-from functools import reduce
-from itertools import product
 
-from codings.bin_coding import get_discretizer as get_bin_discretizer
-from codings.tile_coding import get_discretizer as get_tile_discretizer
+from codings.coding_selector import select_coding
 
 
 
 class QValueFunction():
-    def __init__(self, feature_ranges, num_actions, bins, coding_type,
+    def __init__(self, env, num_actions, bins, coding_type,
                  lambda_val=None, et_type=None):
 
         self.et_type = et_type
@@ -19,14 +16,8 @@ class QValueFunction():
         self.num_actions = num_actions
         self.bins = bins
 
-        if coding_type == "bin":
-            self.discretizer = get_bin_discretizer(feature_ranges, bins)
-            self.num_tilings = 1
-        elif coding_type == "tile":
-            self.discretizer = get_tile_discretizer(feature_ranges, 8, bins)
-            self.num_tilings = 8
-        else:
-            unimplemented
+        self.num_tilings, _, self.discretizer = \
+            select_coding(env, "tabular", coding_type, bins)
 
         self.qtables = None
         self.reset()

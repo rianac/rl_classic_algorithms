@@ -144,12 +144,16 @@ if __name__ == '__main__':
         "temperature" : 0.4,
     }
 
+    # Setting for state space discretization
+    discretization = {
+        "coding_type" : "fourier_simple",     # can be tested only as param2
+        "bins" : [10,10],           # can be tested only as param2
+    }
+
     params = {
         "algorithm" : "sarsa",    # can be tested only as param2
         # q function representation
         "qfun_type" : "linear_approx",    # can be tested only as param2
-        "bins" : [10,10],           # can be tested only as param2
-        "coding_type" : "fourier_simple",     # can be tested only as param2
         # common learning parameters
         "alpha" : 0.01,
         "gamma" : 1.0,
@@ -163,6 +167,7 @@ if __name__ == '__main__':
         "model_size" : 500,
     }
 
+    params.update(discretization)
     params.update(exploration)
 
     tested_param1 = "epsilon"

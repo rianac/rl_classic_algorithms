@@ -1,16 +1,11 @@
 import numpy as np
-from functools import reduce
-from operator import mul
 
-from codings.bin_coding import get_discretizer as get_bin_discretizer
-from codings.tile_coding import get_discretizer as get_tile_discretizer
-from codings.rbf_coding import get_discretizer as get_rbf_discretizer
-from codings.polynomial_coding import get_discretizer as get_polynomial_discretizer
-from codings.fourier_coding import get_discretizer as get_fourier_discretizer
+from codings.coding_selector import select_coding
+
 
 
 class QValueFunction():
-    def __init__(self, feature_ranges, num_actions, bins, coding_type,
+    def __init__(self, env, num_actions, bins, coding_type,
                  lambda_val=None, et_type=None):
 
         self.et_type = et_type
@@ -21,29 +16,9 @@ class QValueFunction():
             self.zweigths = None
 
         self.num_actions = num_actions
-        self.bins = reduce(mul,bins,1)
 
-        self.coding_type = coding_type
-        if self.coding_type == "bin":
-            self.discretizer = get_bin_discretizer(feature_ranges, bins)
-            self.coding_size = self.bins
-        elif self.coding_type == "tile":
-            self.discretizer = get_tile_discretizer(feature_ranges, 8, bins)
-            self.coding_size = self.bins * 8
-        elif self.coding_type == "rbf":
-            self.discretizer = get_rbf_discretizer(feature_ranges, bins)
-            self.coding_size = self.bins
-        elif self.coding_type == "polynomial":
-            self.discretizer = get_polynomial_discretizer(bins)
-            self.coding_size = self.bins
-        elif self.coding_type == "fourier":
-            self.discretizer = get_fourier_discretizer(feature_ranges, bins)
-            self.coding_size = self.bins
-        elif self.coding_type == "fourier_simple":
-            self.discretizer = get_fourier_discretizer(feature_ranges, bins, True)
-            self.coding_size = sum(bins) - (len(bins) - 1)
-        else:
-            unimplemented
+        _, self.coding_size, self.discretizer = \
+            select_coding(env, "linapprox", coding_type, bins)
 
         self.weigths = None
         self.reset()

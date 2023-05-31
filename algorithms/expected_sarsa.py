@@ -14,13 +14,10 @@ class ExpectedSarsa():
             "Action space of environment is not discrete"
         assert isinstance(env.observation_space, gsp.box.Box), \
             "Observation space of environment is not continuous"
-        assert (len(bins),) == env.observation_space.shape, \
-            "Incompatible number of state dimensions"
 
         self.alpha = alpha
         self.gamma = gamma
 
-        self.bins = bins
         self.nactions = env.action_space.n
         self.actions = list(range(env.action_space.n))
 
@@ -29,17 +26,12 @@ class ExpectedSarsa():
         self.prev_state = None
         self.prev_action = None
 
-
-        feature_ranges = [[l,h] for l,h
-                          in zip(list(env.observation_space.low),
-                                 list(env.observation_space.high))]
-
         if qfun_type == "tabular":
-            self.qfunction = TabularQ(feature_ranges, len(self.actions),
-                                      self.bins, coding_type=coding_type)
+            self.qfunction = TabularQ(env, len(self.actions),
+                                      bins, coding_type=coding_type)
         elif qfun_type == "linear_approx":
-            self.qfunction = LinearQ(feature_ranges, len(self.actions),
-                                     self.bins, coding_type=coding_type)
+            self.qfunction = LinearQ(env, len(self.actions),
+                                     bins, coding_type=coding_type)
         else:
             unimplemented
 
