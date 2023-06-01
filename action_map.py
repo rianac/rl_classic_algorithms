@@ -50,14 +50,16 @@ def map_test(env, params,num_episodes = 500):
                       in zip(list(env.observation_space.low),
                              list(env.observation_space.high))]
 
-    if params["coding_type"] == "bin":
-        num_tiles = params["bins"]
+    if params["coding_type"] == "aggregating":
+        num_tiles = params["granularity"]
     elif params["coding_type"] == "tile":
         num_tiles = [ (x-1)*8 + 1 for x in params["bins"]]
     elif params["coding_type"] == "rbf":
-        num_tiles = params["bins"]
+        num_tiles = params["granularity"]
     elif params["coding_type"] == "polynomial":
-        num_tiles = params["bins"]
+        num_tiles = params["granularity"]
+    elif params["coding_type"] == "fourier":
+        num_tiles = params["granularity"]
     else:
         unimplemented
 
@@ -104,7 +106,7 @@ if __name__ == '__main__':
     params = {
         "algorithm" : "sarsa",
         "qfun_type" : "linear_approx",
-        "bins" : [10,10],
+        "granularity" : [10,10],
         "coding_type" : "rbf",
         "alpha" : 0.1,
         "gamma" : 1.0,

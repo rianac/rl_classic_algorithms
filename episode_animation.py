@@ -76,7 +76,7 @@ if __name__ == '__main__':
     params = {
         "algorithm" : "qlearning",
         "qfun_type" : "linear_approx",
-        "bins" : [10,10],
+        "granularity" : [10,10],
         "coding_type" : "tile",
         "alpha" : 0.1,
         "gamma" : 1.0,

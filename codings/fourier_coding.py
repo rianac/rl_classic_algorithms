@@ -8,18 +8,18 @@ from itertools import product
 
 
 
-def get_discretizer(feature_ranges, number_bins, simple=False):
+def get_discretizer(feature_ranges, orders, simple=False):
     """
     feature_ranges: range of each feature
         example: x: [-1, 1], y: [2, 5] -> [[-1, 1], [2, 5]]
-    number_bins: bin size for each dimension
-        example: 8 bins for x and 6 bins for y -> [8, 6]
+    number_orderss: bin size for each dimension
+        example: 8 orders for x and 6 orders for y -> [8, 6]
 
     return: fourier cos base coder
     """
 
     num_dims = len(feature_ranges)
-    assert num_dims == len(number_bins), "Dimensionality mismatch"
+    assert num_dims == len(orders), "Dimensionality mismatch"
 
     # Find normalisation constants for (x - n1) / n2
     n1 = np.array([feat_range[0] for feat_range in feature_ranges])
@@ -27,7 +27,7 @@ def get_discretizer(feature_ranges, number_bins, simple=False):
                    for feat_range in feature_ranges])
 
     # Find dimension multiplies
-    tmp = [range(bin) for bin in number_bins]
+    tmp = [range(order) for order in orders]
     coefs = np.transpose(np.array([comb for comb in product(*tmp)]))
 
     if simple:

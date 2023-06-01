@@ -7,7 +7,7 @@ from utils.exploration_policy import ExplorationPolicy
 
 
 class QLearning():
-    def __init__(self, env, qfun_type, bins, coding_type,
+    def __init__(self, env, qfun_type, granularity, coding_type,
                  alpha=0.1, gamma=0.99, **kwargs):
 
         assert isinstance(env.action_space, gsp.discrete.Discrete), \
@@ -27,10 +27,10 @@ class QLearning():
 
         if qfun_type == "tabular":
             self.qfunction = TabularQ(env, len(self.actions),
-                                      bins, coding_type=coding_type)
+                                      granularity, coding_type=coding_type)
         elif qfun_type == "linear_approx":
             self.qfunction = LinearQ(env, len(self.actions),
-                                     bins, coding_type=coding_type)
+                                     granularity, coding_type=coding_type)
         else:
             unimplemented
 

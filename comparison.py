@@ -70,7 +70,7 @@ if __name__ == '__main__':
          {
              "algorithm" : "sarsa",
              "qfun_type" : "linear_approx",
-             "bins" : [10,10],
+             "granularity" : [10,10],
              "coding_type" : "rbf",
              "alpha" : 0.1,
              "gamma" : 1.0,
@@ -91,7 +91,7 @@ if __name__ == '__main__':
          {
              "algorithm" : "sarsa",
              "qfun_type" : "linear_approx",
-             "bins" : [10,10],
+             "granularity" : [10,10],
              "coding_type" : "rbf",
              "alpha" : 0.1,
              "gamma" : 1.0,
@@ -112,7 +112,7 @@ if __name__ == '__main__':
          {
              "algorithm" : "sarsa",
              "qfun_type" : "linear_approx",
-             "bins" : [10,10],
+             "granularity" : [10,10],
              "coding_type" : "rbf",
              "alpha" : 0.1,
              "gamma" : 1.0,

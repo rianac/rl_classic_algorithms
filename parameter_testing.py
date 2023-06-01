@@ -147,7 +147,7 @@ if __name__ == '__main__':
     # Setting for state space discretization
     discretization = {
         "coding_type" : "fourier_simple",     # can be tested only as param2
-        "bins" : [10,10],           # can be tested only as param2
+        "granularity" : [10,10],           # can be tested only as param2
     }
 
     params = {

@@ -5,7 +5,7 @@ from codings.coding_selector import select_coding
 
 
 class QValueFunction():
-    def __init__(self, env, num_actions, bins, coding_type,
+    def __init__(self, env, num_actions, granularity, coding_type,
                  lambda_val=None, et_type=None):
 
         self.et_type = et_type
@@ -18,7 +18,7 @@ class QValueFunction():
         self.num_actions = num_actions
 
         _, self.coding_size, self.discretizer = \
-            select_coding(env, "linapprox", coding_type, bins)
+            select_coding(env, "linapprox", coding_type, granularity)
 
         self.weigths = None
         self.reset()
