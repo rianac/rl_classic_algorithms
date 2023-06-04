@@ -1,8 +1,3 @@
-"""
-Fourier-base based coding
-
-"""
-
 import numpy as np
 from itertools import product
 
@@ -12,8 +7,10 @@ def get_discretizer(feature_ranges, orders, simple=False):
     """
     feature_ranges: range of each feature
         example: x: [-1, 1], y: [2, 5] -> [[-1, 1], [2, 5]]
-    number_orderss: bin size for each dimension
-        example: 8 orders for x and 6 orders for y -> [8, 6]
+    orders: number of different frequencies for each dimension
+        example: order 8 for x and order 6 for y -> [8, 6]
+    simple: if True then multi-dimensional coding, combination of
+        one-dimensional codings otherwise
 
     return: fourier cos base coder
     """
@@ -26,7 +23,7 @@ def get_discretizer(feature_ranges, orders, simple=False):
     n2 = np.array([feat_range[1] - feat_range[0]
                    for feat_range in feature_ranges])
 
-    # Find dimension multiplies
+    # Find dimension frequency multiplies
     tmp = [range(order) for order in orders]
     coefs = np.transpose(np.array([comb for comb in product(*tmp)]))
 
@@ -36,7 +33,7 @@ def get_discretizer(feature_ranges, orders, simple=False):
 
     def discretizer(features, **kwargs):
         """
-        feature: sample with multiple dimensions to be encoded;
+        feature: multi-dimensional sample to be encoded;
             example: x = 0.8 and y = 3.2 -> [0.8, 3.2]
 
         return: the encoding using fourier cos base coding
@@ -44,8 +41,8 @@ def get_discretizer(feature_ranges, orders, simple=False):
         assert num_dims == len(features), "Dimensionality mismatch"
 
         norm_features = (features - n1) / n2
-
         codings = np.cos(np.matmul(norm_features, coefs) * np.pi)
+
         return codings
 
     return discretizer

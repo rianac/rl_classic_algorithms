@@ -146,12 +146,12 @@ if __name__ == '__main__':
 
     # Setting for state space discretization
     discretization = {
-        "coding_type" : "fourier_simple",     # can be tested only as param2
+        "coding_type" : "tile",     # can be tested only as param2
         "granularity" : [10,10],           # can be tested only as param2
     }
 
     params = {
-        "algorithm" : "sarsa",    # can be tested only as param2
+        "algorithm" : "expected_sarsa",    # can be tested only as param2
         # q function representation
         "qfun_type" : "linear_approx",    # can be tested only as param2
         # common learning parameters
@@ -170,16 +170,16 @@ if __name__ == '__main__':
     params.update(discretization)
     params.update(exploration)
 
-    tested_param1 = "epsilon"
+    tested_param1 = "gamma"
     tested_param1_values = [1.0]
 
     tested_param2 = None
-    tested_param2_values = [[3,3]]
+    tested_param2_values = ["rbf", "rbf_simple", "fourier", "fourier_simple"]
 
     if tested_param2 is not None:
         two_parameter_test(env, params, tested_param1 , tested_param1_values,
                            tested_param2, tested_param2_values,
-                           num_repetitions=1,skip_episodes=50,num_episodes=150)
+                           num_repetitions=20,skip_episodes=50,num_episodes=150)
     else:
         one_parameter_test(env, params, tested_param1, tested_param1_values,
                            num_repetitions=1, skip_episodes=50,num_episodes=150)

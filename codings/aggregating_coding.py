@@ -1,23 +1,19 @@
-"""
-Bins' based coding
-
-MM, 2023
-"""
-
 import numpy as np
 from functools import reduce
 from operator import mul
 
 
 
-def get_discretizer(feature_ranges, number_bins):
+def get_discretizer(feature_ranges, number_bins, simple=False):
     """
     feature_ranges: range of each feature
         example: x: [-1, 1], y: [2, 5] -> [[-1, 1], [2, 5]]
     number_bins: bin size for each dimension
         example: 8 bins for x and 6 bins for y -> [8, 6]
+    simple: if True ten multi-dimensional coding, combination os
+        one-dimensional codings otherwise
 
-    return: bin coder
+    return: aggregating coder
     """
 
     num_dims = len(feature_ranges)
@@ -44,10 +40,15 @@ def get_discretizer(feature_ranges, number_bins):
 
         # Transform indices of selected bins for separate dimensions into
         # one vector if required.
-        if vector_type:
+        if not simple and vector_type:
             x = np.zeros(number_bins)
             x[feat_codings] = 1
             feat_codings = x.reshape(-1)
+        elif simple:
+            x = [np.zeros(bin) for bin in number_bins]
+            for ind, y in zip(feat_codings,x):
+                y[ind] = 1
+            feat_codings = np.concatenate(x)
         else:
             feat_codings = [feat_codings]
 

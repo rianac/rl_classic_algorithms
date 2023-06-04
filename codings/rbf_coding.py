@@ -1,20 +1,16 @@
-"""
-RBF based coding
-
-MM, 2023
-"""
-
 import numpy as np
 from itertools import product
 
 
 
-def get_discretizer(feature_ranges, number_centers):
+def get_discretizer(feature_ranges, number_centers, simple=False):
     """
     feature_ranges: range of each feature
         example: x: [-1, 1], y: [2, 5] -> [[-1, 1], [2, 5]]
-    number_centers: bin size for each dimension
+    number_centers: number of bins for each dimension
         example: 8 bins for x and 6 bins for y -> [8, 6]
+    simple: if True then multi-dimensional coding, combination of
+        one-dimensional codings otherwise
 
     return: rbf coder
     """
@@ -39,29 +35,57 @@ def get_discretizer(feature_ranges, number_centers):
 
     def discretizer(features, **kwargs):
         """
-        feature: sample with multiple dimensions to be encoded;
+        feature: multi-dimensional somple to be encoded;
             example: x = 0.8 and y = 3.2 -> [0.8, 3.2]
 
-        return: the encoding using rbf coding
+        return: the multi-dimensional encoding using rbf coding
         """
         assert num_dims == len(features), "Dimensionality mismatch"
 
-        def gauss(features, center):
-            x = (
-                (f - c)**2 / d
-                for f, c, d in zip(features, center, denominators)
-            )
-            return np.exp(- sum(x))
+        # Readable but slow alternative - replaced by a faster one
+        # def gauss(features, center):
+        #     x = (
+        #         (f - c)**2 / d
+        #         for f, c, d in zip(features, center, denominators)
+        #     )
+        #     return np.exp(- sum(x))
+        #
+        # x =  [gauss(features, center) for center in product(*bin_centers)]
+        # x = np.array(x)
 
-        x =  [gauss(features, center) for center in product(*bin_centers)]
+        y = np.array([center for center in product(*bin_centers)]).transpose()
+        y = [ (features[i] - y[i])**2 / denominators[i]
+              for i in range(y.shape[0])]
+        y = np.exp(- sum(y))
 
-        return np.array(x)
+        return y
 
-    return discretizer
+
+    def discretizer_simple(features, **kwargs):
+        """
+        feature: multi-dimensional sample to be encoded;
+            example: x = 0.8 and y = 3.2 -> [0.8, 3.2]
+
+        return: the combination of one-dimensional encodings using rbf coding
+        """
+        assert num_dims == len(features), "Dimensionality mismatch"
+
+        x = [ np.exp(-(f - c)**2 / d)
+              for f, c, d in zip(features, bin_centers, denominators) ]
+        x = np.concatenate(x, axis=0)
+
+        return x
+
+    if simple:
+        return discretizer_simple
+    else:
+        return discretizer
 
 
 if __name__ == '__main__':
     fr = [[0.,10],[0,10]]
     bn = [5,5]
+    disc = get_discretizer(fr,bn,True)
+    print(disc([1,1]))
     disc = get_discretizer(fr,bn)
     print(disc([1,1]))

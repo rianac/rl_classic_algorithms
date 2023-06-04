@@ -1,9 +1,3 @@
-"""
-Tiling software based on Sutton-Barto, 2018.
-
-MM, 2023
-"""
-
 import numpy as np
 from functools import reduce
 from operator import mul, add
@@ -80,7 +74,7 @@ def create_tilings(num_dims, feature_ranges, number_tilings, number_bins):
     return tilings
 
 
-def get_discretizer(feature_ranges, number_tilings, number_bins):
+def get_discretizer(feature_ranges, number_tilings, number_bins, simple=False):
     """
     feature_ranges: range of each feature
         example: x: [-1, 1], y: [2, 5] -> [[-1, 1], [2, 5]]
@@ -88,15 +82,19 @@ def get_discretizer(feature_ranges, number_tilings, number_bins):
         example: 8 tilings -> 8
     number_bins: bin size for each dimension
         example: 8 bins for x and 6 bins for y -> [8, 6]
+    simple: if True then multi-dimensiona coding, combination of
+        one-dimensional codings otherwise
 
     return: tile coder
     """
+    num_dims = len(feature_ranges)
 
     # Recommended number of tilings (sutton-barto 2ed, p. 220)
     # - in relation with number of dimensions
-    # - beeing power of 2
-    num_dims = len(feature_ranges)
-    assert number_tilings >= 4 * num_dims, "Number of tilings too small"
+    # - being power of 2
+    assert not simple or number_tilings >= 4, "Number of tilings too small"
+    assert simple or number_tilings >= 4 * num_dims, \
+        "Number of tilings too small"
     assert (number_tilings & (number_tilings - 1) == 0
             and number_tilings != 0), "Number of tilings not power of 2"
 
@@ -104,21 +102,24 @@ def get_discretizer(feature_ranges, number_tilings, number_bins):
 
     # Find separators for separating bins for all tilings along all
     # dimensions.
-    tilings = create_tilings(num_dims, feature_ranges, number_tilings,
-                             number_bins)
+    if not simple:
+        tilings = create_tilings(num_dims, feature_ranges,
+                                 number_tilings, number_bins)
+    else:
+        tilings = np.array([create_tilings(1, [feature_ranges[i]],
+                                           number_tilings, number_bins)
+                            for i in range(num_dims)])
+        tilings = np.array(tilings).reshape(num_dims, number_tilings, -1)
 
-    # Weights for converting multidimensional position of bins into
-    # one indice.
-    bin_weights = number_bins[1:] + [1]
-    bin_weights = [reduce(mul, bin_weights[i:], 1) for i in range(num_dims)]
 
     def discretizer(features, vector_type=False):
         """
-        feature: sample with multiple dimensions to be encoded;
+        features: multi-dimensional sample to be encoded;
             example: x = 0.8 and y = 3.2 -> [0.8, 3.2]
-        output_type: the form of a list of indices or a vector of values
+        vector_type: the form of a list of indices or a vector of values
 
-        return: the encoding for the feature on each tiling
+        return: the multi-dimensional encoding for the feature using
+            tile coding
         """
         assert num_dims == len(features), "Dimensionality mismatch"
 
@@ -137,12 +138,43 @@ def get_discretizer(feature_ranges, number_tilings, number_bins):
 
         return feat_codings
 
-    return discretizer
+
+    def discretizer_simple(features, **kwargs):
+        """
+        features: multi-dimensional sample to be encoded;
+            example: x = 0.8 and y = 3.2 -> [0.8, 3.2]
+
+        return: the combination of one-dimensional encodings for the feature
+            using tile coding
+        """
+        assert num_dims == len(features), "Dimensionality mismatch"
+
+        # Select suitable bins for feature sample (for each dimension
+        # separately).
+        feat_codings = [list(map(lambda x: np.digitize(features[i], x),
+                                 tilings[i]))
+                        for i in range(num_dims)]
+
+        # Transform indices of selected bins for separate dimensions into
+        # one vector if required.
+        x = np.concatenate([[np.zeros(n) for _ in range(number_tilings)]
+             for n in number_bins])
+
+        for i,code in zip(np.concatenate(feat_codings),x):
+            code[i] = 1
+        feat_codings = np.concatenate(x)
+
+        return feat_codings
+
+    if simple:
+        return discretizer_simple
+    else:
+        return discretizer
 
 
 if __name__ == '__main__':
     import unittest
-                
+
     class TestCreateTilings(unittest.TestCase):
         def test_dimensions(self):
             ranges = [[0,1],[1,2],[2,3]]
@@ -192,7 +224,7 @@ if __name__ == '__main__':
             self.assertEqual(list(disc([0.5])),[(1,),(1,),(0,),(0,)])
             self.assertEqual(list(disc([0.7])),[(1,),(1,),(1,),(0,)])
             self.assertEqual(list(disc([0.9])),[(1,),(1,),(1,),(1,)])
-            
+
         def test_discretize_2_dim(self):
             ranges = [[0,1],[0,1]]
             disc = get_discretizer(ranges,8,[2,2])
@@ -204,6 +236,12 @@ if __name__ == '__main__':
                              [(0,0),(0,0),(0,0),(0,0),(0,0),(0,0),(0,0),(0,0)])
             self.assertEqual(list(disc([0.1,0.9])),
                              [(0,1),(0,1),(0,1),(0,1),(0,1),(0,1),(0,1),(0,1)])
-           
+
+        def test_discretize_simple(self):
+            ranges = [[0,1],[0,1]]
+            disc = get_discretizer(ranges,4,[2,2],True)
+            self.assertEqual(list(disc([0.1,0.3])),[0, 0, 0, 0, 1, 0, 0, 0])
+            self.assertEqual(list(disc([0.5,0.7])),[1, 1, 0, 0, 1, 1, 1, 0])
+
     unittest.main()
 
