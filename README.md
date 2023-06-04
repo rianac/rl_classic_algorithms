@@ -22,12 +22,12 @@ Coding is controlled by `"granularity"` of the form of a list [n<sub>1</sub>, n<
 | rbf  | real-valued | n<sub>1</sub> * n<sub>2</sub> | n<sub>1</sub> + n<sub>2</sub> |
 | fourier | real-valued | n<sub>1</sub> * n<sub>2</sub>  | n<sub>1</sub> + n<sub>2</sub> - 1 |
 
-Only coding methods producing binary features can be combined with tabular representation. Linear approximate representation can be combined with all provided coding methods.
+Only coding methods producing indexes can be combined with tabular representation. Linear approximate representation can be combined with all provided coding methods.
 
 ## Exploration policy
 
 Three types of exploration policies are available for algorithms learning action value function **Q** (algorithms for learning target policy **π** directly use this learned policy), :
 - *ε-greedy* (selection `"epsilon_greedy"`) - with probability 1-ε is selected the action with the highest Q value, with probability ε is selected random action
-- *softmax* (selection `"softmax"`) - actions are selected with probabilities given by their Q values 
+- *softmax* (selection `"softmax"`) - actions are selected with probabilities given by their **Q** values 
 - *max Boltzmann* (selection `"max_boltzmann"`) - with probability 1-ε is selected the action with the highest Q value, with probability ε are actions selected with probabilities given by their Q values
 
