@@ -7,7 +7,7 @@ from algorithms.sarsa_lambda import SarsaLambda
 from algorithms.qlearning import QLearning
 from algorithms.expected_sarsa import ExpectedSarsa
 from algorithms.dynaq import DynaQ
-#from algorithms.one_step_actor_critic import OneStepActorCritic
+from algorithms.one_step_actor_critic import OneStepActorCritic
 
 from utils.operation_manager import run_repeatedly
 
@@ -146,16 +146,17 @@ if __name__ == '__main__':
 
     # Setting for state space discretization
     discretization = {
-        "coding_type" : "tile",     # can be tested only as param2
+        "coding_type" : "rbf",     # can be tested only as param2
         "granularity" : [10,10],           # can be tested only as param2
     }
 
     params = {
-        "algorithm" : "expected_sarsa",    # can be tested only as param2
+        "algorithm" : "osac",    # can be tested only as param2
         # q function representation
         "qfun_type" : "linear_approx",    # can be tested only as param2
         # common learning parameters
-        "alpha" : 0.01,
+        "alpha_w" : 0.01,
+        "alpha_θ" : 0.01,
         "gamma" : 1.0,
         # sarsa_n specific parameters
         "n" : 5,
@@ -170,16 +171,16 @@ if __name__ == '__main__':
     params.update(discretization)
     params.update(exploration)
 
-    tested_param1 = "gamma"
-    tested_param1_values = [1.0]
+    tested_param1 = "alpha_w"
+    tested_param1_values = [0.01, 0.1]
 
-    tested_param2 = None
-    tested_param2_values = ["rbf", "rbf_simple", "fourier", "fourier_simple"]
+    tested_param2 = "alpha_θ"
+    tested_param2_values = [0.01, 0.1]
 
     if tested_param2 is not None:
         two_parameter_test(env, params, tested_param1 , tested_param1_values,
                            tested_param2, tested_param2_values,
-                           num_repetitions=20,skip_episodes=50,num_episodes=150)
+                           num_repetitions=5,skip_episodes=50,num_episodes=150)
     else:
         one_parameter_test(env, params, tested_param1, tested_param1_values,
                            num_repetitions=1, skip_episodes=50,num_episodes=150)

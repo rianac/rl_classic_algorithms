@@ -8,14 +8,14 @@ from utils.exploration_policy import ExplorationPolicy
 
 class ExpectedSarsa():
     def __init__(self, env, qfun_type, granularity, coding_type,
-                 alpha=0.1, gamma=0.99, **kwargs):
+                 alpha_w, gamma, **kwargs):
 
         assert isinstance(env.action_space, gsp.discrete.Discrete), \
             "Action space of environment is not discrete"
         assert isinstance(env.observation_space, gsp.box.Box), \
             "Observation space of environment is not continuous"
 
-        self.alpha = alpha
+        self.alpha = alpha_w
         self.gamma = gamma
 
         self.nactions = env.action_space.n

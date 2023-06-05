@@ -9,7 +9,7 @@ from utils.exploration_policy import ExplorationPolicy
 
 class SarsaN():
     def __init__(self, env, n, qfun_type, granularity, coding_type,
-                 alpha=0.1, gamma=0.99, **kwargs):
+                 alpha_w, gamma, **kwargs):
 
         assert isinstance(env.action_space, gsp.discrete.Discrete), \
             "Action space of environment is not discrete"
@@ -18,7 +18,7 @@ class SarsaN():
 
         self.n = n
 
-        self.alpha = alpha
+        self.alpha = alpha_w
         self.gamma = gamma
 
         self.actions = list(range(env.action_space.n))

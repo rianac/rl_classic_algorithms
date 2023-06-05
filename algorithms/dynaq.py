@@ -9,7 +9,7 @@ from utils.exploration_policy import ExplorationPolicy
 
 class DynaQ():
     def __init__(self, env, qfun_type, granularity, coding_type,
-                 alpha=0.1, gamma=0.99, plan_rep=10, model_size=1000,
+                 alpha_w, gamma, plan_rep, model_size,
                  **kwargs):
 
         assert isinstance(env.action_space, gsp.discrete.Discrete), \
@@ -17,7 +17,7 @@ class DynaQ():
         assert isinstance(env.observation_space, gsp.box.Box), \
             "Observation space of environment is not continuous"
 
-        self.alpha = alpha
+        self.alpha = alpha_w
         self.gamma = gamma
 
         self.plan_rep = plan_rep

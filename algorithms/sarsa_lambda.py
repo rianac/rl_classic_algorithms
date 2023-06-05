@@ -8,7 +8,7 @@ from utils.exploration_policy import ExplorationPolicy
 
 class SarsaLambda():
     def __init__(self, env, qfun_type, granularity, coding_type,
-                 alpha=0.1, gamma=0.99,
+                 alpha_w, gamma,
                  lambda_val=0.5, et_type="accumulating", **kwargs):
 
         assert isinstance(env.action_space, gsp.discrete.Discrete), \
@@ -16,7 +16,7 @@ class SarsaLambda():
         assert isinstance(env.observation_space, gsp.box.Box), \
             "Observation space of environment is not continuous"
 
-        self.alpha = alpha
+        self.alpha = alpha_w
         self.gamma = gamma
 
         self.actions = list(range(env.action_space.n))
