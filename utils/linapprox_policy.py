@@ -11,10 +11,6 @@ class PiFunction():
         self.actions = actions
         self.nactions = len(self.actions)
 
-        self.action_probs = None
-        self.action = None
-        self.state_coding = None
-
         _, self.coding_size, self.discretizer = \
             select_coding(env, "linapprox", coding_type, granularity)
 
@@ -24,23 +20,28 @@ class PiFunction():
     def reset(self):
         self.weigths = np.zeros((self.nactions, self.coding_size))
 
+    def _get_action_probs(self, state_coding):
+        probs = np.exp(np.matmul(self.weigths, state_coding))
+        action_probs = probs / sum(probs)
+
+        return action_probs
+        
     def get_action(self, state):
-        self.state_coding = self.discretizer(state,vector_type=True)
+        state_coding = self.discretizer(state,vector_type=True)
+        
+        action_probs = self._get_action_probs(state_coding)       
+        [action] = random.choices(self.actions, action_probs)
 
-        probs = np.exp(np.matmul(self.weigths, self.state_coding))
-        self.action_probs = probs / sum(probs)
+        return action
 
-        [self.action] = random.choices(self.actions, self.action_probs)
+    def update(self, state, action, td_error, alpha):
+        state_coding = self.discretizer(state,vector_type=True)        
+        features = state_coding.reshape((1,-1))
 
-        return self.action
-
-    def update(self, td_error, alpha):
-
-        features = self.state_coding.reshape((1,-1))
-        probs = self.action_probs.reshape((-1,1))
-
+        probs = self._get_action_probs(state_coding).reshape((-1,1))
+        
         ln_gradient = -1 * probs * features
-        ln_gradient[self.action] = (1 - probs[self.action]) * features
+        ln_gradient[action] = (1 - probs[action]) * features
 
         self.weigths += alpha * td_error * ln_gradient
 

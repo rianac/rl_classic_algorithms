@@ -172,15 +172,15 @@ if __name__ == '__main__':
     params.update(exploration)
 
     tested_param1 = "alpha_w"
-    tested_param1_values = [0.01, 0.1]
+    tested_param1_values = [0.01]
 
     tested_param2 = "alpha_θ"
-    tested_param2_values = [0.01, 0.1]
+    tested_param2_values = [0.01]
 
     if tested_param2 is not None:
         two_parameter_test(env, params, tested_param1 , tested_param1_values,
                            tested_param2, tested_param2_values,
-                           num_repetitions=5,skip_episodes=50,num_episodes=150)
+                           num_repetitions=2,skip_episodes=50,num_episodes=150)
     else:
         one_parameter_test(env, params, tested_param1, tested_param1_values,
                            num_repetitions=1, skip_episodes=50,num_episodes=150)

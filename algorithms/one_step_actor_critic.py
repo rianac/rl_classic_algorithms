@@ -22,6 +22,7 @@ class OneStepActorCritic():
 
         self.actions = list(range(env.action_space.n))
         self.prev_state = None
+        self.prev_action = None
 
         self.policy = Policy(env, self.actions,
                              granularity, coding_type=coding_type)
@@ -31,6 +32,7 @@ class OneStepActorCritic():
     def reset(self):
 
         self.prev_state = None
+        self.prev_action = None
 
         self.vfunction.reset()
         self.policy.reset()
@@ -38,6 +40,7 @@ class OneStepActorCritic():
     def reset_episode(self):
 
         self.prev_state = None
+        self.prev_action = None
 
     def act(self, reward, state, learning, done):
 
@@ -49,6 +52,7 @@ class OneStepActorCritic():
             action = self.policy.get_action(state)
 
             self.prev_state = state
+            self.prev_action = action
 
             return action
 
@@ -69,4 +73,5 @@ class OneStepActorCritic():
         td_error = target - v_value
 
         self.vfunction.update(self.prev_state, td_error, self.alpha_w)
-        self.policy.update(td_error, self.alpha_θ)
+        self.policy.update(self.prev_state, self.prev_action,
+                           td_error, self.alpha_θ)
