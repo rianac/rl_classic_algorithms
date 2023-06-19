@@ -1,5 +1,6 @@
 import random
-from math import exp, isclose
+import sys
+from math import exp, log, isclose
 
 
 
@@ -18,6 +19,7 @@ class ExplorationPolicy():
         self.epsilon = None
 
         self.temperature = temperature
+        self.threshold = log(sys.float_info.max)
 
     def reset(self):
 
@@ -41,7 +43,13 @@ class ExplorationPolicy():
 
         elif self.policy == "softmax":
 
-            dist = [exp(x/self.temperature) for x in qvalues]
+            max_qvalue = max(qvalues)
+            if max_qvalue / self.temperature > self.threshold:
+                temperature = max_qvalue / self.threshold + 0.001
+            else:
+                temperature = self.temperature
+
+            dist = [exp(x/temperature) for x in qvalues]
             pow_sum = sum(dist)
 
             if isclose(pow_sum, 0.0, abs_tol=1e-300):
@@ -51,7 +59,13 @@ class ExplorationPolicy():
 
         elif self.policy == "max_boltzmann":
 
-            dist = [exp(x/self.temperature) for x in qvalues]
+            max_qvalue = max(qvalues)
+            if max_qvalue / self.temperature > self.threshold:
+                temperature = max_qvalue / self.threshold + 0.001
+            else:
+                temperature = self.temperature
+
+            dist = [exp(x/temperature) for x in qvalues]
             pow_sum = sum(dist)
 
             if isclose(pow_sum, 0.0, abs_tol=1e-300):

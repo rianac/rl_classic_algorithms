@@ -140,7 +140,7 @@ if __name__ == '__main__':
         "epsilon" : 1.0,
         "epsilon_decay" : 0.95,
         "min_epsilon" : 0.00001,
-        # static plan for softmax policy
+        # static plan for softmax/max_boltzmann policy
         "temperature" : 0.4,
     }
 
@@ -151,7 +151,7 @@ if __name__ == '__main__':
     }
 
     params = {
-        "algorithm" : "osac",    # can be tested only as param2
+        "algorithm" : "sarsa",    # can be tested only as param2
         # q function representation
         "qfun_type" : "linear_approx",    # can be tested only as param2
         # common learning parameters
@@ -180,7 +180,7 @@ if __name__ == '__main__':
     if tested_param2 is not None:
         two_parameter_test(env, params, tested_param1 , tested_param1_values,
                            tested_param2, tested_param2_values,
-                           num_repetitions=2,skip_episodes=50,num_episodes=150)
+                           num_repetitions=1,skip_episodes=50,num_episodes=150)
     else:
         one_parameter_test(env, params, tested_param1, tested_param1_values,
                            num_repetitions=1, skip_episodes=50,num_episodes=150)
