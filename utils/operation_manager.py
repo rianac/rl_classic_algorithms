@@ -1,13 +1,16 @@
 import numpy as np
+import gym
 
 
 
 def run_one_episode(env, agent, training):
 
+    gym_ver = int(gym.__version__.split('.')[1])
+
     agent.reset_episode()
 
     output  = env.reset()
-    if len(output) == 2 and isinstance(output[0],np.ndarray):
+    if  gym_ver >= 25:
         state, _ = output
     else:
         state = output
@@ -21,7 +24,7 @@ def run_one_episode(env, agent, training):
         action = agent.act(reward, state, training, done)
 
         output = env.step(action)
-        if len(output) == 5:
+        if  gym_ver >= 25:
             state, reward, terminated, truncated, info = output
             done = terminated or truncated
         else:

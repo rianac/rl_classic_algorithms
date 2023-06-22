@@ -26,7 +26,7 @@ def get_discretizer(feature_ranges, number_centers, simple=False):
 
     # Find widths of bins along all dimensions
     bin_widths = (
-        (feat_range[1] - feat_range[0])/feat_centers
+        feat_range[1]/feat_centers - feat_range[0]/feat_centers
         for feat_range, feat_centers in zip(feature_ranges, number_centers)
     )
 

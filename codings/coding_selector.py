@@ -18,9 +18,24 @@ def select_coding(env, representation, coding_type, granularity):
         assert coding_type == "aggregating" or coding_type == "tile", \
             "Only bin / tile codings can be used for tabular representation"
 
-    feature_ranges = [[l,h] for l,h
-                      in zip(list(env.observation_space.low),
-                             list(env.observation_space.high))]
+    if type(env.unwrapped).__name__  == 'MountainCarEnv':
+        feature_ranges = [[l,h] for l,h
+                          in zip(list(env.observation_space.low),
+                                 list(env.observation_space.high))]
+    elif type(env.unwrapped).__name__  == 'CartPoleEnv':
+        feature_ranges = [
+            [-2.5, 2.5],     # cart position   -4.8, 4.8
+            [-3.5, 3.5],     # cart velocity   -inf, inf
+            [-0.28, 0.28],   # pole angle      -0.418, 0.418
+            [-3.8, 3.8]      # pole velocity   -inf, inf
+        ]
+    elif type(env.unwrapped).__name__  == 'AcrobotEnv':
+        feature_ranges = [[l,h] for l,h
+                          in zip(list(env.observation_space.low),
+                                 list(env.observation_space.high))]
+    else:
+        unimplemented
+
     ntilings = None
 
     if coding_type == "aggregating":

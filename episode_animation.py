@@ -6,8 +6,11 @@ from algorithms.sarsa_lambda import SarsaLambda
 from algorithms.qlearning import QLearning
 from algorithms.expected_sarsa import ExpectedSarsa
 from algorithms.dynaq import DynaQ
+from algorithms.one_step_actor_critic import OneStepActorCritic
 
 from utils.operation_manager import run_episodes
+
+from config import default_params as params
 
 
 
@@ -33,6 +36,8 @@ def animation_test(env, params, num_episodes=500):
         RLAgent = ExpectedSarsa
     elif params["algorithm"] == "dynaq":
         RLAgent = DynaQ
+    elif params["algorithm"] == "osac":
+        RLAgent = OneStepActorCritic
     else:
         unimplemented
 
@@ -58,37 +63,15 @@ def animation_test(env, params, num_episodes=500):
 
 if __name__ == '__main__':
 
+    assert int(gym.__version__.split('.')[1]) <= 22, \
+        "Monitor wrapper not present in gym version 23 and higher"
+
     env = gym.make("MountainCar-v0")
     env._max_episode_steps = 3000
+    #env = gym.make("CartPole-v1")
+    #env = gym.make("Acrobot-v1")
 
-    # Setting for exploration policy
-    exploration = {
-        # policy types implemented: "epsilon_greedy", "softmax", "max_boltzmann"
-        "policy" : "max_boltzmann",
-        # linear decaying plan for epsilon_greedy policy
-        "epsilon" : 1.0,
-        "epsilon_decay" : 0.95,
-        "min_epsilon" : 0.00001,
-        # static plan for softmax policy
-        "temperature" : 0.4,
-    }
 
-    params = {
-        "algorithm" : "qlearning",
-        "qfun_type" : "linear_approx",
-        "granularity" : [10,10],
-        "coding_type" : "tile",
-        "alpha" : 0.1,
-        "gamma" : 1.0,
-        "n" : 5,
-        "lambda" : 0.5,
-        "et_type" : "accumulating",
-        "plan_rep" : 10,
-        "model_size" : 500,
-    }
-
-    params.update(exploration)
-
-    animation_test(env,params,num_episodes=200)
+    animation_test(env,params, num_episodes=300)
 
     env.close()

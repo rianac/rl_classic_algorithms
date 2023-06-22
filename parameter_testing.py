@@ -11,6 +11,8 @@ from algorithms.one_step_actor_critic import OneStepActorCritic
 
 from utils.operation_manager import run_repeatedly
 
+from config import default_params as params
+
 
 
 def grid_test(env, default_params,
@@ -78,14 +80,19 @@ def grid_test(env, default_params,
         data.append(data_part)
 
     def plot_grid_search(x, xlabel, ys, ylabel, ylabels):
+        x = [ str(y) for y in x]
         plt.figure(figsize=(5,5))
         for i in range(len(ylabels)):
-            plt.plot(x, ys[i], marker='o', label=ylabel+"="+str(ylabels[i]))
+            if ylabel == "other_params":
+                plt.plot(x, ys[i], marker='o')
+            else:
+                plt.plot(x, ys[i], marker='o', label=ylabel+"="+str(ylabels[i]))
         plt.xlabel(xlabel)
         plt.ylabel("average number of steps")
         #plt.title("Grid search")
         plt.xticks(x)
-        plt.legend(loc="upper right")
+        if ylabel != "other_params":
+            plt.legend(loc="upper right")
         plt.show()
 
     plot_grid_search(primary_param_values, primary_param_name, data,
@@ -117,7 +124,7 @@ def one_parameter_test(env, default_params,
     dummy parameter.
     """
 
-    dummy_param_name = "other params"
+    dummy_param_name = "other_params"
     dummy_param_values = ["defaults"]
 
     grid_test(env,default_params,
@@ -130,59 +137,28 @@ def one_parameter_test(env, default_params,
 if __name__ == '__main__':
 
     env = gym.make("MountainCar-v0")
-    env._max_episode_steps = 3000
+    env._max_episode_steps = 500
+    #env = gym.make("CartPole-v1")
+    #env = gym.make("Acrobot-v1")
 
-    # Setting for exploration policy
-    exploration = {
-        # policy types implemented: "epsilon_greedy", "softmax", "max_boltzmann"
-        "policy" : "max_boltzmann",
-        # linear decaying plan for epsilon_greedy policy
-        "epsilon" : 1.0,
-        "epsilon_decay" : 0.95,
-        "min_epsilon" : 0.00001,
-        # static plan for softmax/max_boltzmann policy
-        "temperature" : 0.4,
-    }
 
-    # Setting for state space discretization
-    discretization = {
-        "coding_type" : "rbf",     # can be tested only as param2
-        "granularity" : [10,10],           # can be tested only as param2
-    }
+    tested_param1 = "algorithm"
+    tested_param1_values = ["sarsa","qlearning", "sarsa_n", "sarsa_lambda",
+                            "expected_sarsa", "osac", "dynaq"]
 
-    params = {
-        "algorithm" : "sarsa",    # can be tested only as param2
-        # q function representation
-        "qfun_type" : "linear_approx",    # can be tested only as param2
-        # common learning parameters
-        "alpha_w" : 0.01,
-        "alpha_θ" : 0.01,
-        "gamma" : 1.0,
-        # sarsa_n specific parameters
-        "n" : 5,
-        # sarsa_lambda specific parameters
-        "lambda_val" : 0.5,
-        "et_type" : "accumulating",  # can be tested only as param2
-        # dynaq specific parameters
-        "plan_rep" : 10,
-        "model_size" : 500,
-    }
-
-    params.update(discretization)
-    params.update(exploration)
-
-    tested_param1 = "alpha_w"
-    tested_param1_values = [0.01]
-
-    tested_param2 = "alpha_θ"
-    tested_param2_values = [0.01]
+    tested_param2 = "qfun_type"
+    tested_param2_values = ["tabular","linear_approx"]
 
     if tested_param2 is not None:
-        two_parameter_test(env, params, tested_param1 , tested_param1_values,
+        two_parameter_test(env, params, 
+                           tested_param1, tested_param1_values,
                            tested_param2, tested_param2_values,
-                           num_repetitions=1,skip_episodes=50,num_episodes=150)
+                           num_repetitions=1,
+                           skip_episodes=100, num_episodes=200)
     else:
-        one_parameter_test(env, params, tested_param1, tested_param1_values,
-                           num_repetitions=1, skip_episodes=50,num_episodes=150)
+        one_parameter_test(env, params, 
+                           tested_param1, tested_param1_values,
+                           num_repetitions=1, 
+                           skip_episodes=50, num_episodes=150)
 
     env.close()

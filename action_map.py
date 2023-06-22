@@ -9,8 +9,11 @@ from algorithms.sarsa_lambda import SarsaLambda
 from algorithms.qlearning import QLearning
 from algorithms.expected_sarsa import ExpectedSarsa
 from algorithms.dynaq import DynaQ
+from algorithms.one_step_actor_critic import OneStepActorCritic
 
 from utils.operation_manager import run_episodes
+
+from config import default_params as params
 
 
 
@@ -40,6 +43,8 @@ def map_test(env, params,num_episodes = 500):
         RLAgent = ExpectedSarsa
     elif params["algorithm"] == "dynaq":
         RLAgent = DynaQ
+    elif params["algorithm"] == "osac":
+        RLAgent = OneStepActorCritic
     else:
         unimplemented
 
@@ -50,18 +55,7 @@ def map_test(env, params,num_episodes = 500):
                       in zip(list(env.observation_space.low),
                              list(env.observation_space.high))]
 
-    if params["coding_type"] == "aggregating":
-        num_tiles = params["granularity"]
-    elif params["coding_type"] == "tile":
-        num_tiles = [ (x-1)*8 + 1 for x in params["bins"]]
-    elif params["coding_type"] == "rbf":
-        num_tiles = params["granularity"]
-    elif params["coding_type"] == "polynomial":
-        num_tiles = params["granularity"]
-    elif params["coding_type"] == "fourier":
-        num_tiles = params["granularity"]
-    else:
-        unimplemented
+    num_tiles = [ 4 * x for x in params["granularity"]]
 
     x = np.linspace(feature_ranges[0][0],feature_ranges[0][1],6*num_tiles[0]+1)
     y = np.linspace(feature_ranges[1][0],feature_ranges[1][1],6*num_tiles[1]+1)
@@ -80,7 +74,7 @@ def map_test(env, params,num_episodes = 500):
 
     plt.xlabel('Position')
     plt.ylabel('Velocity')
-    plt.title("Greedy policy based on q-value function")
+    plt.title("Action map")
     plt.colorbar(p, shrink=0.7, ticks=[0,1,2])
     plt.show()
 
@@ -91,34 +85,6 @@ if __name__ == '__main__':
     env = gym.make("MountainCar-v0")
     env._max_episode_steps = 3000
 
-    # Setting for exploration policy
-    exploration = {
-        # policy types implemented: "epsilon_greedy", "softmax", "max_boltzmann"
-        "policy" : "max_boltzmann",
-        # linear decaying plan for epsilon_greedy policy
-        "epsilon" : 1.0,
-        "epsilon_decay" : 0.95,
-        "min_epsilon" : 0.00001,
-        # static plan for softmax policy
-        "temperature" : 0.4,
-    }
-
-    params = {
-        "algorithm" : "sarsa",
-        "qfun_type" : "linear_approx",
-        "granularity" : [10,10],
-        "coding_type" : "rbf",
-        "alpha" : 0.1,
-        "gamma" : 1.0,
-        "n" : 5,
-        "lambda_val" : 0.5,
-        "et_type" : "accumulating",
-        "plan_rep" : 9,
-        "model_size" : 500,
-    }
-
-    params.update(exploration)
-
-    map_test(env,params,num_episodes=100)
+    map_test(env,params, num_episodes=200)
 
     env.close()
