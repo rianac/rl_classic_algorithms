@@ -1,3 +1,4 @@
+from copy import deepcopy
 import gym
 import matplotlib.pyplot as plt
 
@@ -7,8 +8,12 @@ from algorithms.sarsa_lambda import SarsaLambda
 from algorithms.qlearning import QLearning
 from algorithms.expected_sarsa import ExpectedSarsa
 from algorithms.dynaq import DynaQ
+from algorithms.one_step_actor_critic import OneStepActorCritic
 
 from utils.operation_manager import run_repeatedly
+
+
+from config import default_params
 
 
 
@@ -36,6 +41,8 @@ def algorithm_test(env, params, num_episodes=500, num_repetitions=10):
             RLAgent = ExpectedSarsa
         elif agent_params["algorithm"] == "dynaq":
             RLAgent = DynaQ
+        elif agent_params["algorithm"] == "osac":
+            RLAgent = OneStepActorCritic
         else:
             unimplemented
 
@@ -49,7 +56,7 @@ def algorithm_test(env, params, num_episodes=500, num_repetitions=10):
         plt.figure(figsize=(10,5))
         for i in range(len(steps_per_episodes)):
             plt.plot(steps_per_episodes[i], label=algs[i])
-        plt.ylim([0,1500])
+        plt.ylim([0,550])
         plt.xlabel("episode")
         plt.ylabel("steps")
         plt.title("Avg. steps per episode")
@@ -62,75 +69,28 @@ def algorithm_test(env, params, num_episodes=500, num_repetitions=10):
 
 if __name__ == '__main__':
 
-    env = gym.make("MountainCar-v0")
-    env._max_episode_steps = 3000
+    #env = gym.make("MountainCar-v0")
+    #env._max_episode_steps = 1000
+    #env = gym.make("CartPole-v1")
+    env = gym.make("Acrobot-v1")
+
 
     params = [
-        ("eg",
-         {
-             "algorithm" : "sarsa",
-             "qfun_type" : "linear_approx",
-             "granularity" : [10,10],
-             "coding_type" : "rbf",
-             "alpha" : 0.1,
-             "gamma" : 1.0,
-        "policy" : "epsilon_greedy",
-        # linear decaying plan for epsilon_greedy policy
-        "epsilon" : 1.0,
-        "epsilon_decay" : 0.95,
-        "min_epsilon" : 0.00001,
-        # static plan for softmax policy
-        "temperature" : 0.4,
-             "n" : 5,
-             "lambda" : 0.5,
-             "et_type" : "accumulating",
-             "plan_rep" : 50,
-             "model_size" : 500,
-         }),
-        ("s",
-         {
-             "algorithm" : "sarsa",
-             "qfun_type" : "linear_approx",
-             "granularity" : [10,10],
-             "coding_type" : "rbf",
-             "alpha" : 0.1,
-             "gamma" : 1.0,
-        "policy" : "softmax",
-        # linear decaying plan for epsilon_greedy policy
-        "epsilon" : 1.0,
-        "epsilon_decay" : 0.95,
-        "min_epsilon" : 0.00001,
-        # static plan for softmax policy
-        "temperature" : 0.4,
-             "n" : 5,
-             "lambda" : 0.5,
-             "et_type" : "accumulating",
-             "plan_rep" : 50,
-             "model_size" : 500,
-         }),
-        ("mb",
-         {
-             "algorithm" : "sarsa",
-             "qfun_type" : "linear_approx",
-             "granularity" : [10,10],
-             "coding_type" : "rbf",
-             "alpha" : 0.1,
-             "gamma" : 1.0,
-        "policy" : "max_boltzmann",
-        # linear decaying plan for epsilon_greedy policy
-        "epsilon" : 1.0,
-        "epsilon_decay" : 0.95,
-        "min_epsilon" : 0.00001,
-        # static plan for softmax policy
-        "temperature" : 0.4,
-             "n" : 5,
-             "lambda" : 0.5,
-             "et_type" : "accumulating",
-             "plan_rep" : 50,
-             "model_size" : 500,
-         })
+        ["label1", deepcopy(default_params)],
+        ["label2", deepcopy(default_params)],
+        ["label3", deepcopy(default_params)]
     ]
 
-    algorithm_test(env, params[:], num_repetitions=10,num_episodes=100)
+    params[0][0] = "osac"
+    params[0][1]["algorithm"] = "osac"
+
+    params[1][0] = "sarsa_n"
+    params[1][1]["algorithm"] = "sarsa_n"
+
+    params[2][0] = "sarsa_lambda"
+    params[2][1]["algorithm"] = "sarsa_lambda"
+
+
+    algorithm_test(env, params, num_repetitions=3, num_episodes=150)
 
     env.close()

@@ -33,7 +33,7 @@ discretization = {
     #   Mountain Car : 2
     #   Cart Pole : 4
     #   Acrobot : 6
-    "granularity" : [10,10],
+    "granularity" : [4,4,4,4,4,4],
 }
 
 

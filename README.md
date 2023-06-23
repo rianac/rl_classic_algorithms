@@ -1,5 +1,33 @@
 # rl_classic_algorithms
-Classic RL algorithms for Gymnasium environments with continuous state space and discrete action space
+Classic RL algorithms (*Sutton-Barto: Reinforcement Learning An Introduction*) for Gym classic control environments with continuous state space and discrete action space.
+
+## Environments
+
+- *mountain car* - to accelerate a car in order to reach the top of a hill (two-dimensional 
+continuous observation space, three discrete actions)
+- *cart pole* - to balance a pole by applying forces on the cart (four-dimensional
+continuous observation space, two discrete actions)
+- *acrobot* - to swing the free end of a chain above the given line (six-dimensional
+continuous observation space, three discrete actions)
+
+<img src="video/mountain_car_84steps.gif" width="250">
+<img src="video/cart_pole_500steps.gif" width="250">
+<img src="video/acrobot_80steps.gif" width="250">
+
+## Algorithms
+
+A set of algorithms is provided - some of them are given in two versions (for two
+different representations of value functions).
+
+| algorithm | tabular Q | linear approx Q | linear approx V and π |
+|:----------:|:--------:|:---------------:|:----------------------:|
+| sarsa      |    Y     |        Y        |                        |
+| qlearning  |    Y     |        Y        |                        |
+| expected sarsa | Y    |        Y        |                        |
+| sarsa(n)   |    Y     |        Y        |                        |
+| sarsa(λ)   |    Y     |        Y        |                        |
+| one step actor critic |     |           |         Y              |
+| dynaq      |    Y     |        Y        |                        |
 
 ## Coding state space
 
