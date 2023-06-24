@@ -69,28 +69,31 @@ def algorithm_test(env, params, num_episodes=500, num_repetitions=10):
 
 if __name__ == '__main__':
 
-    #env = gym.make("MountainCar-v0")
-    #env._max_episode_steps = 1000
+    env = gym.make("MountainCar-v0")
+    env._max_episode_steps = 600
     #env = gym.make("CartPole-v1")
-    env = gym.make("Acrobot-v1")
+    #env = gym.make("Acrobot-v1")
 
 
     params = [
         ["label1", deepcopy(default_params)],
         ["label2", deepcopy(default_params)],
-        ["label3", deepcopy(default_params)]
+        ["label3", deepcopy(default_params)],
+        ["label4", deepcopy(default_params)]
     ]
 
-    params[0][0] = "osac"
+    params[0][0] = "One-step Actor-Critic"
     params[0][1]["algorithm"] = "osac"
 
-    params[1][0] = "sarsa_n"
+    params[1][0] = "Sarsa(n)"
     params[1][1]["algorithm"] = "sarsa_n"
 
-    params[2][0] = "sarsa_lambda"
-    params[2][1]["algorithm"] = "sarsa_lambda"
+    params[2][0] = "Expected Sarsa"
+    params[2][1]["algorithm"] = "expected_sarsa"
 
+    params[3][0] = "Dyna-Q"
+    params[3][1]["algorithm"] = "dynaq"
 
-    algorithm_test(env, params, num_repetitions=3, num_episodes=150)
+    algorithm_test(env, params, num_repetitions=15, num_episodes=160)
 
     env.close()

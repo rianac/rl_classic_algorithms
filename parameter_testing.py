@@ -142,19 +142,18 @@ if __name__ == '__main__':
     #env = gym.make("Acrobot-v1")
 
 
-    tested_param1 = "algorithm"
-    tested_param1_values = ["sarsa","qlearning", "sarsa_n", "sarsa_lambda",
-                            "expected_sarsa", "osac", "dynaq"]
+    tested_param1 = "granularity"
+    tested_param1_values = [[4,4],[6,6],[8,8],[10,10]]
 
-    tested_param2 = "qfun_type"
-    tested_param2_values = ["tabular","linear_approx"]
+    tested_param2 = "coding_type"
+    tested_param2_values = ["tile","rbf", "fourier"]
 
     if tested_param2 is not None:
         two_parameter_test(env, params, 
                            tested_param1, tested_param1_values,
                            tested_param2, tested_param2_values,
-                           num_repetitions=1,
-                           skip_episodes=100, num_episodes=200)
+                           num_repetitions=10,
+                           skip_episodes=100, num_episodes=150)
     else:
         one_parameter_test(env, params, 
                            tested_param1, tested_param1_values,

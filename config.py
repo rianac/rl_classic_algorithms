@@ -27,13 +27,13 @@ discretization = {
     # coding types implemented:
     #   "aggregating", "aggregating_simple", "tile", "tile_simple"
     #   "rbf", "rbf_simple", "fourier", "fourier_simple"
-    "coding_type" : "tile",
+    "coding_type" : "rbf",
 
     # number of dimensions depends on used model:
     #   Mountain Car : 2
     #   Cart Pole : 4
     #   Acrobot : 6
-    "granularity" : [4,4,4,4,4,4],
+    "granularity" : [12,12],
 }
 
 
@@ -44,7 +44,7 @@ algorithm_params = {
     #    "sarsa", "qlearning", "expected_sarsa"
     #    "sarsa_n", "sarsa_lambda"
     #    "osac" (one step actor critic), "dynaq"
-    "algorithm" : "osac",
+    "algorithm" : "sarsa_n",
 
     # q function representation types:
     #    "tabular", "linear_approx"

@@ -10,9 +10,6 @@ continuous observation space, two discrete actions)
 - *acrobot* - to swing the free end of a chain above the given line (six-dimensional
 continuous observation space, three discrete actions)
 
-<img src="video/mountain_car_84steps.gif" width="250">
-<img src="video/cart_pole_500steps.gif" width="250">
-<img src="video/acrobot_80steps.gif" width="250">
 
 ## Algorithms
 
@@ -25,7 +22,7 @@ different representations of value functions).
 | qlearning  |    Y     |        Y        |                        |
 | expected sarsa | Y    |        Y        |                        |
 | sarsa(n)   |    Y     |        Y        |                        |
-| sarsa(λ)   |    Y     |        Y        |                        |
+| sarsa(λ)   |    Y    |        Y    |                        |
 | one step actor critic |     |           |         Y              |
 | dynaq      |    Y     |        Y        |                        |
 
@@ -59,3 +56,47 @@ Three types of exploration policies are available for algorithms learning action
 - *softmax* (selection `"softmax"`) - actions are selected with probabilities given by their **Q** values 
 - *max Boltzmann* (selection `"max_boltzmann"`) - with probability 1-ε is selected the action with the highest Q value, with probability ε are actions selected with probabilities given by their Q values
 
+## Test scripts
+
+All test scripts imports `config.py` defining default values for all parameters (exploration related,
+observation space coding related and algorithm related). Test scripts can use these values as they are, modify them or duplicate them into different settings.
+
+### Action map 
+- script `action_map.py`
+- mapping from observation space to action space (which action corresponds to which part of observation space)
+- action selection is based on the function that is learned (action value function or policy function)
+- available only for two-dimensional observation space (i.e. for *mountain car* environment only)
+
+<center>
+<img src="docs/action_map.png" width="400">
+</center>
+
+### Grid search
+- script `parameter_setting.py`
+- comparing performance of different values of one or two tested parameters
+- performance is calculated as average performance (average number of steps) per episode, but skipping a given number of episodes at the beginning of a run
+- to overcome stochastic nature, a given number of runs is averaged
+- available for all environments
+
+<center>
+<img src="docs/grid_search.png" width="300">
+</center>
+
+### Learning progress
+- script `comparison.py`
+- documents how performance (number of steps per episode) changes along episode progression
+- one or more graphs can be included - different graphs can represent different algorithms or one algorithm with different value settings (or mix of both)
+- to overcome stochastic nature, a given number of runs is averaged
+- available for all environments
+
+<center>
+<img src="docs/comparison.png" width="450">
+</center>
+
+### Animation
+- script `episode_animation.py`
+- available only for Gym version up to 22 (based on Monitor wrapper which was removed in version 23)
+
+<img src="video/mountain_car_84steps.gif" width="250">
+<img src="video/cart_pole_500steps.gif" width="250">
+<img src="video/acrobot_80steps.gif" width="250">

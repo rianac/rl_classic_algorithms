@@ -85,6 +85,6 @@ if __name__ == '__main__':
     env = gym.make("MountainCar-v0")
     env._max_episode_steps = 3000
 
-    map_test(env,params, num_episodes=200)
+    map_test(env,params, num_episodes=500)
 
     env.close()
