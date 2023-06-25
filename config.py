@@ -9,7 +9,7 @@ Setting parameter values used by testing scripts as default parameter values.
 exploration = {
 
     # policy types implemented: "epsilon_greedy", "softmax", "max_boltzmann"
-    "policy" : "max_boltzmann",
+    "policy" : "epsilon_greedy",
 
     # linear decaying plan for epsilon_greedy/max_boltzmann policy
     "epsilon" : 1.0,
@@ -27,13 +27,13 @@ discretization = {
     # coding types implemented:
     #   "aggregating", "aggregating_simple", "tile", "tile_simple"
     #   "rbf", "rbf_simple", "fourier", "fourier_simple"
-    "coding_type" : "rbf",
+    "coding_type" : "tile",
 
     # number of dimensions depends on used model:
     #   Mountain Car : 2
     #   Cart Pole : 4
     #   Acrobot : 6
-    "granularity" : [12,12],
+    "granularity" : [8,8],
 }
 
 
@@ -41,10 +41,10 @@ discretization = {
 algorithm_params = {
 
     # algorithms implemented:
-    #    "sarsa", "qlearning", "expected_sarsa"
-    #    "sarsa_n", "sarsa_lambda"
+    #    "sarsa", "double_sarsa", "qlearning", "double_qlearning", 
+    #    "expected_sarsa", "sarsa_n", "sarsa_lambda"
     #    "osac" (one step actor critic), "dynaq"
-    "algorithm" : "sarsa_n",
+    "algorithm" : "double_sarsa",
 
     # q function representation types:
     #    "tabular", "linear_approx"

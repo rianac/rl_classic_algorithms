@@ -18,13 +18,15 @@ different representations of value functions).
 
 | algorithm | tabular Q | linear approx Q | linear approx V and π |
 |:----------:|:--------:|:---------------:|:----------------------:|
-| sarsa      |    Y     |        Y        |                        |
-| qlearning  |    Y     |        Y        |                        |
-| expected sarsa | Y    |        Y        |                        |
-| sarsa(n)   |    Y     |        Y        |                        |
-| sarsa(λ)   |    Y    |        Y    |                        |
-| one step actor critic |     |           |         Y              |
-| dynaq      |    Y     |        Y        |                        |
+| Sarsa      |    Y     |        Y        |                        |
+| Q-Learning  |    Y     |        Y        |                        |
+| Double Sarsa |  Y     |        Y        |                        |
+| Double Q-learning | Y  |        Y        |                        |
+| Expected Sarsa | Y    |        Y        |                        |
+| Sarsa(n)   |    Y     |        Y        |                        |
+| Sarsa(λ)   |    Y (replacing, accumulating ET)   | Y (accumulating ET)    |                        |
+| One-step Actor-Critic |     |           |         Y              |
+| Dyna-Q      |    Y     |        Y        |                        |
 
 ## Coding state space
 

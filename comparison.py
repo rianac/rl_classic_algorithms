@@ -3,9 +3,11 @@ import gym
 import matplotlib.pyplot as plt
 
 from algorithms.sarsa import Sarsa
+from algorithms.double_sarsa import DoubleSarsa
 from algorithms.sarsa_n import SarsaN
 from algorithms.sarsa_lambda import SarsaLambda
 from algorithms.qlearning import QLearning
+from algorithms.double_qlearning import DoubleQLearning
 from algorithms.expected_sarsa import ExpectedSarsa
 from algorithms.dynaq import DynaQ
 from algorithms.one_step_actor_critic import OneStepActorCritic
@@ -31,12 +33,16 @@ def algorithm_test(env, params, num_episodes=500, num_repetitions=10):
 
         if agent_params["algorithm"] == "sarsa":
             RLAgent = Sarsa
+        elif agent_params["algorithm"] == "double_sarsa":
+            RLAgent = DoubleSarsa
         elif agent_params["algorithm"] == "sarsa_n":
             RLAgent = SarsaN
         elif agent_params["algorithm"] == "sarsa_lambda":
             RLAgent = SarsaLambda
         elif agent_params["algorithm"] == "qlearning":
             RLAgent = QLearning
+        elif agent_params["algorithm"] == "double_qlearning":
+            RLAgent = DoubleQLearning
         elif agent_params["algorithm"] == "expected_sarsa":
             RLAgent = ExpectedSarsa
         elif agent_params["algorithm"] == "dynaq":
@@ -82,18 +88,18 @@ if __name__ == '__main__':
         ["label4", deepcopy(default_params)]
     ]
 
-    params[0][0] = "One-step Actor-Critic"
-    params[0][1]["algorithm"] = "osac"
+    params[0][0] = "Sarsa"
+    params[0][1]["algorithm"] = "sarsa"
 
-    params[1][0] = "Sarsa(n)"
-    params[1][1]["algorithm"] = "sarsa_n"
+    params[1][0] = "Double Sarsa"
+    params[1][1]["algorithm"] = "double_sarsa"
 
-    params[2][0] = "Expected Sarsa"
-    params[2][1]["algorithm"] = "expected_sarsa"
+    params[2][0] = "Q learning"
+    params[2][1]["algorithm"] = "qlearning"
 
-    params[3][0] = "Dyna-Q"
-    params[3][1]["algorithm"] = "dynaq"
+    params[3][0] = "Double Q learning"
+    params[3][1]["algorithm"] = "double_qlearning"
 
-    algorithm_test(env, params, num_repetitions=15, num_episodes=160)
+    algorithm_test(env, params, num_repetitions=30, num_episodes=160)
 
     env.close()

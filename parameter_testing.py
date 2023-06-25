@@ -2,9 +2,11 @@ import gym
 import matplotlib.pyplot as plt
 
 from algorithms.sarsa import Sarsa
+from algorithms.double_sarsa import DoubleSarsa
 from algorithms.sarsa_n import SarsaN
 from algorithms.sarsa_lambda import SarsaLambda
 from algorithms.qlearning import QLearning
+from algorithms.double_qlearning import DoubleQLearning
 from algorithms.expected_sarsa import ExpectedSarsa
 from algorithms.dynaq import DynaQ
 from algorithms.one_step_actor_critic import OneStepActorCritic
@@ -55,12 +57,16 @@ def grid_test(env, default_params,
 
             if default_params["algorithm"] == "sarsa":
                 RLAgent = Sarsa
+            elif default_params["algorithm"] == "double_sarsa":
+                RLAgent = DoubleSarsa
             elif default_params["algorithm"] == "sarsa_n":
                 RLAgent = SarsaN
             elif default_params["algorithm"] == "sarsa_lambda":
                 RLAgent = SarsaLambda
             elif default_params["algorithm"] == "qlearning":
                 RLAgent = QLearning
+            elif default_params["algorithm"] == "double_qlearning":
+                RLAgent = DoubleQLearning
             elif default_params["algorithm"] == "expected_sarsa":
                 RLAgent = ExpectedSarsa
             elif default_params["algorithm"] == "dynaq":
@@ -142,8 +148,8 @@ if __name__ == '__main__':
     #env = gym.make("Acrobot-v1")
 
 
-    tested_param1 = "granularity"
-    tested_param1_values = [[4,4],[6,6],[8,8],[10,10]]
+    tested_param1 = "algorithm"
+    tested_param1_values = ["sarsa","double_sarsa"]
 
     tested_param2 = "coding_type"
     tested_param2_values = ["tile","rbf", "fourier"]
@@ -152,12 +158,12 @@ if __name__ == '__main__':
         two_parameter_test(env, params, 
                            tested_param1, tested_param1_values,
                            tested_param2, tested_param2_values,
-                           num_repetitions=10,
+                           num_repetitions=5,
                            skip_episodes=100, num_episodes=150)
     else:
         one_parameter_test(env, params, 
                            tested_param1, tested_param1_values,
-                           num_repetitions=1, 
-                           skip_episodes=50, num_episodes=150)
+                           num_repetitions=3, 
+                           skip_episodes=100, num_episodes=150)
 
     env.close()

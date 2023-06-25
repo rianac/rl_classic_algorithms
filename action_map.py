@@ -4,9 +4,11 @@ import matplotlib.colors as mplc
 import matplotlib.pyplot as plt
 
 from algorithms.sarsa import Sarsa
+from algorithms.double_sarsa import DoubleSarsa
 from algorithms.sarsa_n import SarsaN
 from algorithms.sarsa_lambda import SarsaLambda
 from algorithms.qlearning import QLearning
+from algorithms.double_qlearning import DoubleQLearning
 from algorithms.expected_sarsa import ExpectedSarsa
 from algorithms.dynaq import DynaQ
 from algorithms.one_step_actor_critic import OneStepActorCritic
@@ -33,12 +35,16 @@ def map_test(env, params,num_episodes = 500):
     """
     if params["algorithm"] == "sarsa":
         RLAgent = Sarsa
+    elif params["algorithm"] == "double_sarsa":
+        RLAgent = DoubleSarsa
     elif params["algorithm"] == "sarsa_n":
         RLAgent = SarsaN
     elif params["algorithm"] == "sarsa_lambda":
         RLAgent = SarsaLambda
     elif params["algorithm"] == "qlearning":
         RLAgent = QLearning
+    elif params["algorithm"] == "double_qlearning":
+        RLAgent = DoubleQLearning
     elif params["algorithm"] == "expected_sarsa":
         RLAgent = ExpectedSarsa
     elif params["algorithm"] == "dynaq":
