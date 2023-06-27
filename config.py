@@ -33,7 +33,7 @@ discretization = {
     #   Mountain Car : 2
     #   Cart Pole : 4
     #   Acrobot : 6
-    "granularity" : [8,8],
+    "granularity" : [4,4,4,4,4,4],
 }
 
 
@@ -44,7 +44,7 @@ algorithm_params = {
     #    "sarsa", "double_sarsa", "qlearning", "double_qlearning", 
     #    "expected_sarsa", "sarsa_n", "sarsa_lambda"
     #    "osac" (one step actor critic), "dynaq"
-    "algorithm" : "double_sarsa",
+    "algorithm" : "sarsa_lambda",
 
     # q function representation types:
     #    "tabular", "linear_approx"
@@ -56,13 +56,14 @@ algorithm_params = {
     "gamma" : 1.0,
 
     # sarsa_n specific parameters
-    "n" : 5,
+    "n" : 7,
 
     # sarsa_lambda specific parameters
-    "lambda_val" : 0.5,
+    "lambda_val" : 0.8,
     # et (eligibility trace) types:
     #   "accumulating" - for tabular as well as lin approx q fun representation
     #   "replacing"   - only for tabular q function representation
+    #   "dutch" - only for lin approx q fun representation
     "et_type" : "accumulating",
 
     # dynaq specific parameters

@@ -10,7 +10,8 @@ class QValueFunction():
 
         self.et_type = et_type
         if self.et_type is not None:
-            assert et_type == "accumulating", "Only accumulating ET possible"
+            assert et_type == "accumulating" or et_type == "dutch", \
+              "Only accumulating or dutch ET possible"
 
             self.lambda_val = lambda_val
             self.zweigths = None
@@ -38,7 +39,7 @@ class QValueFunction():
 
         return qvalue
 
-    def update(self, state, action, target, alpha, gamma=None):
+    def update(self, state, action, target, alpha, gamma=None, q_old=None):
         state_codings = self.discretizer(state,vector_type=True)
 
         qvalue = self.value(state, action, state_codings)
@@ -50,6 +51,14 @@ class QValueFunction():
         elif self.et_type == "accumulating":
             self.zweigths += state_codings
             self.weigths[action] += self.zweigths * delta
+            self.zweigths *= gamma * self.lambda_val
+
+        elif self.et_type == "dutch":
+            self.zweigths += state_codings * \
+              (1.0 - alpha * gamma * self.lambda_val * \
+                     self.zweigths.dot(state_codings))
+            self.weigths[action] += self.zweigths * delta + \
+               alpha * (qvalue - q_old) * (self.zweigths - state_codings)
             self.zweigths *= gamma * self.lambda_val
 
         else:

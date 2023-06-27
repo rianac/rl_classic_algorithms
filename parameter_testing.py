@@ -5,6 +5,7 @@ from algorithms.sarsa import Sarsa
 from algorithms.double_sarsa import DoubleSarsa
 from algorithms.sarsa_n import SarsaN
 from algorithms.sarsa_lambda import SarsaLambda
+from algorithms.true_sarsa_lambda import TrueSarsaLambda
 from algorithms.qlearning import QLearning
 from algorithms.double_qlearning import DoubleQLearning
 from algorithms.expected_sarsa import ExpectedSarsa
@@ -63,6 +64,8 @@ def grid_test(env, default_params,
                 RLAgent = SarsaN
             elif default_params["algorithm"] == "sarsa_lambda":
                 RLAgent = SarsaLambda
+            elif default_params["algorithm"] == "true_sarsa_lambda":
+                RLAgent = TrueSarsaLambda
             elif default_params["algorithm"] == "qlearning":
                 RLAgent = QLearning
             elif default_params["algorithm"] == "double_qlearning":
@@ -142,17 +145,17 @@ def one_parameter_test(env, default_params,
 
 if __name__ == '__main__':
 
-    env = gym.make("MountainCar-v0")
-    env._max_episode_steps = 500
+    #env = gym.make("MountainCar-v0")
+    #env._max_episode_steps = 500
     #env = gym.make("CartPole-v1")
-    #env = gym.make("Acrobot-v1")
+    env = gym.make("Acrobot-v1")
 
 
     tested_param1 = "algorithm"
-    tested_param1_values = ["sarsa","double_sarsa"]
+    tested_param1_values = ["sarsa_n","sarsa_lambda", "dynaq", "osac"]
 
-    tested_param2 = "coding_type"
-    tested_param2_values = ["tile","rbf", "fourier"]
+    tested_param2 = None
+    tested_param2_values = []
 
     if tested_param2 is not None:
         two_parameter_test(env, params, 
@@ -163,7 +166,7 @@ if __name__ == '__main__':
     else:
         one_parameter_test(env, params, 
                            tested_param1, tested_param1_values,
-                           num_repetitions=3, 
+                           num_repetitions=5, 
                            skip_episodes=100, num_episodes=150)
 
     env.close()

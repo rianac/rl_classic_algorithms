@@ -6,6 +6,7 @@ from algorithms.sarsa import Sarsa
 from algorithms.double_sarsa import DoubleSarsa
 from algorithms.sarsa_n import SarsaN
 from algorithms.sarsa_lambda import SarsaLambda
+from algorithms.true_sarsa_lambda import TrueSarsaLambda
 from algorithms.qlearning import QLearning
 from algorithms.double_qlearning import DoubleQLearning
 from algorithms.expected_sarsa import ExpectedSarsa
@@ -39,6 +40,8 @@ def algorithm_test(env, params, num_episodes=500, num_repetitions=10):
             RLAgent = SarsaN
         elif agent_params["algorithm"] == "sarsa_lambda":
             RLAgent = SarsaLambda
+        elif agent_params["algorithm"] == "true_sarsa_lambda":
+            RLAgent = TrueSarsaLambda
         elif agent_params["algorithm"] == "qlearning":
             RLAgent = QLearning
         elif agent_params["algorithm"] == "double_qlearning":
@@ -88,18 +91,28 @@ if __name__ == '__main__':
         ["label4", deepcopy(default_params)]
     ]
 
-    params[0][0] = "Sarsa"
-    params[0][1]["algorithm"] = "sarsa"
+    params[0][0] = "tabular, replacing"
+    params[0][1]["algorithm"] = "sarsa_lambda"
+    params[0][1]["et_type"] = "replacing"
+    params[0][1]["qfun_type"] = "tabular"
+    params[0][1]["alpha_w"] = 0.2
 
-    params[1][0] = "Double Sarsa"
-    params[1][1]["algorithm"] = "double_sarsa"
+    params[1][0] = "tabular, accumulating"
+    params[1][1]["algorithm"] = "sarsa_lambda"
+    params[1][1]["et_type"] = "accumulating"
+    params[1][1]["qfun_type"] = "tabular"
+    params[1][1]["alpha_w"] = 0.2
 
-    params[2][0] = "Q learning"
-    params[2][1]["algorithm"] = "qlearning"
+    params[2][0] = "lin approx, accumulating"
+    params[2][1]["algorithm"] = "sarsa_lambda"
+    params[2][1]["et_type"] = "accumulating"
+    params[2][1]["qfun_type"] = "linear_approx"
 
-    params[3][0] = "Double Q learning"
-    params[3][1]["algorithm"] = "double_qlearning"
+    params[3][0] = "lin approx, dutch"
+    params[3][1]["algorithm"] = "true_sarsa_lambda"
+    params[3][1]["et_type"] = "dutch"
+    params[3][1]["qfun_type"] = "linear_approx"
 
-    algorithm_test(env, params, num_repetitions=30, num_episodes=160)
+    algorithm_test(env, params, num_repetitions=20, num_episodes=200)
 
     env.close()

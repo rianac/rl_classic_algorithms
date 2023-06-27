@@ -14,19 +14,20 @@ continuous observation space, three discrete actions)
 ## Algorithms
 
 A set of algorithms is provided - some of them are given in two versions (for two
-different representations of value functions).
+different representations).
 
-| algorithm | tabular Q | linear approx Q | linear approx V and π |
-|:----------:|:--------:|:---------------:|:----------------------:|
-| Sarsa      |    Y     |        Y        |                        |
-| Q-Learning  |    Y     |        Y        |                        |
-| Double Sarsa |  Y     |        Y        |                        |
-| Double Q-learning | Y  |        Y        |                        |
-| Expected Sarsa | Y    |        Y        |                        |
-| Sarsa(n)   |    Y     |        Y        |                        |
-| Sarsa(λ)   |    Y (replacing, accumulating ET)   | Y (accumulating ET)    |                        |
-| One-step Actor-Critic |     |           |         Y              |
-| Dyna-Q      |    Y     |        Y        |                        |
+| algorithm | tabular representation | linear approximate representation |
+|:----------:|:--------:|:---------------:|
+| Sarsa      |    Y     |        Y        |
+| Q-Learning  |    Y     |        Y        |
+| Double Sarsa |  Y     |        Y        |
+| Double Q-learning | Y  |        Y        |
+| Expected Sarsa | Y    |        Y        |
+| Sarsa(n)   |    Y     |        Y        |
+| Sarsa(λ)   |    Y (replacing, accumulating ET)   | Y (accumulating ET)    |
+| True Sarsa(λ)   |   | Y (dutch ET)    |
+| One-step Actor-Critic |     |      Y     |
+| Dyna-Q      |    Y     |        Y        |
 
 ## Coding state space
 

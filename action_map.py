@@ -7,6 +7,7 @@ from algorithms.sarsa import Sarsa
 from algorithms.double_sarsa import DoubleSarsa
 from algorithms.sarsa_n import SarsaN
 from algorithms.sarsa_lambda import SarsaLambda
+from algorithms.true_sarsa_lambda import TrueSarsaLambda
 from algorithms.qlearning import QLearning
 from algorithms.double_qlearning import DoubleQLearning
 from algorithms.expected_sarsa import ExpectedSarsa
@@ -41,6 +42,8 @@ def map_test(env, params,num_episodes = 500):
         RLAgent = SarsaN
     elif params["algorithm"] == "sarsa_lambda":
         RLAgent = SarsaLambda
+    elif params["algorithm"] == "true_sarsa_lambda":
+        RLAgent = TrueSarsaLambda
     elif params["algorithm"] == "qlearning":
         RLAgent = QLearning
     elif params["algorithm"] == "double_qlearning":
